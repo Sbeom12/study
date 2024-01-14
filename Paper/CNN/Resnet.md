@@ -57,13 +57,49 @@
             * F(x)가 0에 가깝게 학습되므로 조금만한 x값의 변화에 의해 영향을 받게 됨.
     
     </br>
-    
+
     * 효과
         * Layer 수가 많은 깊은 망들도 최적화가 가능하다.(학습이 가능)
         * Layer 수가 늘어나 정확도가 개선된다.
 
-
-## Architecture
+## Identity Mapping by shortcuts
+* ResNet은 깊은 신경망을 효과적으로 학습시키기 위한 아키텍처로, 그 중요한 부분 중 하나가 residual block이다.
+* 기본적인 **residual block의 구조**는 다음과 같다
+    1. 입력 x에 대한 **합성곱(Convolution) 연산**과 **활성화 함수**를 적용한다.
+    2. 이를 또 다른 합성곱과 활성화 함수를 거친 **출력에 더한다**.
 
 </br>
+
+### Indentity shortcut
+$$ y= F(x, {W_i})+x$$
+
+* 위 식에서 x와 y는 각각 input, output을 나타낸다. 잔차 학습을 이용하여 output 값에 input값인 x를 더해주는 것을 확인할 수 있다.
+* 첫 번째 term은 학습된 residual mapping이다
+* 위 식은 $F = W_2 \sigma(W_1x)$ 을 간소화한 모양으로 활성함수인 ReLU를 한 번 통과하고 biases는 생략된 식이다.
+* **단순 덧셈으로 복잡한 구조와 연산이 필요 없다는 것**을 이 식을 통해 직관적으로 보여주고 있다.
+
+### Projection shortcut
+* 만약 입력과 출력의 차원이 다르다면 덧셈 연산이 불가능하여 이를 해결하기 위해 Projection Shortcut을 도입하였다. 
+
+$$ y = F(x, {W_i}) + W_sx $$
+
+</br>
+
+* 단순히 identity shortcut에서 **linear함수**인 Ws를 x에 곱한 꼴로 표현된다.
+* **x와 F의 차원을 동일하게 맞춰주기 위해** 위의 식을 사용한다. 이를 통해 **입력값의 차원을 변환**하여 덧셈 연산이 가능하게 해준다.
+* 또한 gradient를 구하였을 때 Ws가 사라지지 않고 남기 때문에 **vanishing gradient 문제를 해결** 할 수 있다.
+
+</br>
+
+* 이러한 구조를 통해 ResNet은 매우 깊은 네트워크에서도 안정적으로 학습이 가능하며, 그 성능은 다양한 computer vision task에서 입증되었다.
+
+</br>
+
+## Architecture(VGG16 vs Plain vs ResNet)
+* 본 논문에서는 다음과 같이 모델들을 비교하고 있다.  
+![image](https://www.notion.so/ResNet-2810bcb2d48c422eb0a870d9f9e414ab?pvs=4#0a9d956f1cde47118858f57dbba3e0eb)
+
+
+</br>
+
 ## Related Works
