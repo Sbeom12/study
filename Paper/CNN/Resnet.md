@@ -254,7 +254,8 @@ $$ y = F(x, {W_i}) + W_sx $$
     - 채널 수 조절, 계산량 감소, 비선형성 추가.
 - 1x1의 convolution의 단점.
     - 강제로 채널을 줄여 정보 손실이 방생하여 정확도가 떨어진다.
-    <img src= "https://i.imgur.com/aXiDwaK.png" width='400' hegith = '200'>   
+    <img src= "https://i.imgur.com/aXiDwaK.png" width='400' hegith = '200'>     
+    
     [참고](https://velog.io/@lighthouse97/CNN의-Bottleneck에-대한-이해)
 
 * Inception vs xception
@@ -277,4 +278,17 @@ $$ y = F(x, {W_i}) + W_sx $$
 
 * 왼쪽은 기존의 resnet 구조이고 오른쪽은 resnext 구조이다. 
 * resnext의 구조를 자세히 살펴보면, 256개의 채널이 1x1 conv를 거쳐 128개의 채널이 되고, 128개의 채널을 32개의 그룹으로 분할하여 각 그룹당 4개의 채널을 가지는 것을 확인할 수 있다. 그 다음 32개의 그룹에서 생성한 4개의 피쳐맵을 연결하여 128개의 채널을 만든다. 마지막으로 1x1 conv를 거쳐서 256개의 채널이 생성된다. 그리고 group의 개수, 즉 여기서 32는 이 논문에서 새로 도입된 개념인 cardinality가 된다.
+
+### ****Cardinality vs Width****
+    - 위 논문에서는 ResNext에서 Width보다 Cardinality를 증가시키는 것이 더 효율적이라고 말한다.
+    
+    - 위의 표에서 d는 각 그룹의 채널 수를 의미한다. 보이다시피 32개의 그룹 (Cardinality)가 4개의 채널을 가졌을 때 더 성능이 향상된 것을 확인할 수 있다.
+
+- 즉, Cardinality가 높을수록 더 좋은 성능을 가지는 것을 볼 수 있다.
+
+### Increasing Cardinality vs Deeper/Wider
+* 위 논문은 마찬가지로 모델의 깊이나 넓이를 증가시키는 것 보다 Cardinality를 증가시키는 것이 더 효율적이라고 말하고있다.
+
+
+* 위의 표에서는 ResNext-101 > ResNet-101 wider > ResNet-200 순으로 성능이 좋은 것을 확인할 수 있다. 따라서 cardinality > width > deep 순으로 성능 향상에 도움이 된다고 확인할 수 있다.
 ## Related Works
