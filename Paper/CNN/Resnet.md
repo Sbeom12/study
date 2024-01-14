@@ -75,8 +75,8 @@ $$ y= F(x, {W_i})+x$$
 
 * 위 식에서 x와 y는 각각 input, output을 나타낸다. 잔차 학습을 이용하여 output 값에 input값인 x를 더해주는 것을 확인할 수 있다.
 * 첫 번째 term은 학습된 residual mapping이다
+* F + x 연산이 shortcut connection을 의미하고 element-wise addition이다.
 * 위 식은 $F = W_2 \sigma(W_1x)$ 을 간소화한 모양으로 활성함수인 ReLU를 한 번 통과하고 biases는 생략된 식이다.
-* **단순 덧셈으로 복잡한 구조와 연산이 필요 없다는 것**을 이 식을 통해 직관적으로 보여주고 있다.
 
 ### Projection shortcut
 * 만약 입력과 출력의 차원이 다르다면 덧셈 연산이 불가능하여 이를 해결하기 위해 Projection Shortcut을 도입하였다. 
@@ -95,10 +95,21 @@ $$ y = F(x, {W_i}) + W_sx $$
 
 </br>
 
-## Architecture(VGG16 vs Plain vs ResNet)
+## Architecture(VGG19 vs Plain vs ResNet)
 * 본 논문에서는 다음과 같이 모델들을 비교하고 있다.  
-![image](https://www.notion.so/ResNet-2810bcb2d48c422eb0a870d9f9e414ab?pvs=4#0a9d956f1cde47118858f57dbba3e0eb)
+![image](https://github.com/Sbeom12/study/blob/main/image/Resnet/architecture1.JPG?raw=true)
 
+
+### VGG19
+![image2](https://production-media.paperswithcode.com/methods/vgg_7mT4DML.png)
+
+* VGG-19는 19개의 계층으로 이루어진 깊은 컨볼루션 신경망(CNN)으로, 2014년 ILSVRC에서 사용된 모델 중 하나 이다. 주로 이미지 분류 작업에 적용되며, 작은 3x3 필터를 사용한 깊은 구조를 통해 복잡한 이미지 특징을 학습한다.
+* 구조
+    1. **13 Convolution Layers + 3 Fully-connected Layers**
+    2. **3x3 convolution filiters**
+    3. **stride: 1 & padding: 1**
+    4. **2x2 max pooling (stride: 2)**
+    5. **ReLU**
 
 </br>
 
