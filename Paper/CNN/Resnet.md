@@ -226,8 +226,6 @@ $$ y = F(x, {W_i}) + W_sx $$
 - layer의 순서를 많이 바꿀수록  Error가 smooth하게 증가.
 - 즉, Residual network은 Ensenble(앙상블)로 볼 수 있다.
 
-</br>
-
 #### Path
 - 95% 이상의 path가 19~35개의 모듈을 지남.
 - path의 길이가 질수록 input의 영향을 적게 받게됨.
@@ -256,8 +254,27 @@ $$ y = F(x, {W_i}) + W_sx $$
     - 채널 수 조절, 계산량 감소, 비선형성 추가.
 - 1x1의 convolution의 단점.
     - 강제로 채널을 줄여 정보 손실이 방생하여 정확도가 떨어진다.
-    <img src= "https://i.imgur.com/aXiDwaK.png" width='500' hegith = '200'>   
-        
+    <img src= "https://i.imgur.com/aXiDwaK.png" width='400' hegith = '200'>   
+    [참고](https://velog.io/@lighthouse97/CNN의-Bottleneck에-대한-이해)
+
+* Inception vs xception
+    * Xception은 Inception에 있는 1x1 conv 연산을 줄여 더 높은 정확도를 얻음.
+    <img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%9D%B8%EC%85%89%EC%85%98.JPG?raw=true" width='400' hegith = '200'>   
+    <img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/xception.JPG?raw=true" width='400' hegith = '200'> 
+
+### 결과
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%9D%B8%EC%85%89%EC%85%98%20%EA%B2%B0%EA%B3%BC.JPG?raw=true" width='400' hegith = '100'>   
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%9D%B8%EC%85%89%EC%85%98%20%EA%B2%B0%EA%B3%BC2.JPG?raw=true" width='400' hegith = '100'>    
+
+* Xception이 Inception보다 조금 더 좋고, 파라미터수가 더 적은 것을 볼수 있지만, 속도는 조금 더 느리다.
+* 자세한 내용은 아래 참고(Deep Learning with Depthwise Separable Convolutions)
+
 </br>
 
+## 후속연구 : ResNext
+[Aggregated Residual Transformations for Deep Neural Networks](https://arxiv.org/abs/1611.05431)  
+* ResNext는 ResNet의 bottle neck을 아래 그림과 같이 수정한 것이다.
+
+* 왼쪽은 기존의 resnet 구조이고 오른쪽은 resnext 구조이다. 
+* resnext의 구조를 자세히 살펴보면, 256개의 채널이 1x1 conv를 거쳐 128개의 채널이 되고, 128개의 채널을 32개의 그룹으로 분할하여 각 그룹당 4개의 채널을 가지는 것을 확인할 수 있다. 그 다음 32개의 그룹에서 생성한 4개의 피쳐맵을 연결하여 128개의 채널을 만든다. 마지막으로 1x1 conv를 거쳐서 256개의 채널이 생성된다. 그리고 group의 개수, 즉 여기서 32는 이 논문에서 새로 도입된 개념인 cardinality가 된다.
 ## Related Works
