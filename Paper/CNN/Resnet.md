@@ -304,3 +304,244 @@ $$ y = F(x, {W_i}) + W_sx $$
 </br>
 
 ## Code
+
+* Block 정의
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as func
+import torch.backends.cudnn as cudnn
+import torch.optim as optim
+import os
+
+# 기본적인 Residual_Block 정의
+class Residual_Block(nn.Module):
+    def __init__(self, input, output, stride=1):
+        super(Residual_Block, self).__init__()
+
+        # 1번째 3x3 필터를 사용 (너비와 높이를 줄일 때는 stride 값 조절)
+        self.conv1 = nn.Conv2d(input, output, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(output) # 배치 정규화
+        self.relu = nn.ReLU(inplace=True)
+
+        # 2번째 3x3 필터를 사용
+        self.conv2 = nn.Conv2d(output, output, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(output) # 배치 정규화
+
+        self.shortcut = nn.Sequential() # identity인 경우 -> 아무런 변환을 수행하지 않고 입력을 그대로 전달하는 역할
+        if stride != 1: # Identity mapping이 아닌 경우
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(input, output, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(output)
+            )
+
+    def forward(self, x):
+      out = self.bn1(self.conv1(x))
+      out = self.relu(out)
+      out = self.bn2(self.conv2(out))
+      out += self.shortcut(x) # skip connection
+      out = self.relu(out)
+      return out
+
+
+# ResNet 클래스 정의
+class ResNet(nn.Module):
+    def __init__(self, block, num_blocks, num_classes=10):
+        super(ResNet, self).__init__()
+        self.in_planes = 64
+
+        # 64개의 3x3 필터(filter)를 사용
+        self.conv1 = nn.Conv2d(3, self.in_planes, kernel_size=3, stride=2, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.relu = nn.ReLU(inplace=True)
+        self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
+
+        self.layer1 = self._make_layer(block, 64, num_blocks[0], stride=1)
+        self.layer2 = self._make_layer(block, 128, num_blocks[1], stride=2)
+        self.layer3 = self._make_layer(block, 256, num_blocks[2], stride=2)
+        self.layer4 = self._make_layer(block, 512, num_blocks[3], stride=2)
+        self.linear = nn.Linear(512, num_classes)
+
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+
+    # 중간 블록 만들기.
+    def _make_layer(self, block, planes, num_blocks, stride):
+        strides = [stride] + [1] * (num_blocks - 1)
+        layers = []
+        for stride in strides:
+            layers.append(block(self.in_planes, planes, stride))
+            self.in_planes = planes # 다음 레이어를 위해 채널 수 변경
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = self.bn1(self.conv1(x))
+        out = self.relu(out)
+        out = self.maxpool(out)
+
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+
+        out =  self.avgpool(out)
+        out = out.view(out.size(0), -1)
+        out = self.linear(out)
+        return out
+
+
+# ResNet18 함수 정의
+def ResNet18():
+  return ResNet(Residual_Block, [2, 2, 2, 2])
+def ResNet34():
+  return ResNet(Residual_Block, [3, 4, 6, 3])
+```
+
+</br>
+
+* 데이터 다운로드 및 설정
+```python
+import torchvision
+import torchvision.transforms as transforms
+
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    ])
+train_dataset = torchvision.datasets.CIFAR10(root='./data', train=True, download=True, transform=transform)
+test_dataset = torchvision.datasets.CIFAR10(root='./data', train=False, download=True, transform=transform)
+print(train_dataset)
+print(test_dataset)
+train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=64, shuffle=True, num_workers=4)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=50, shuffle=False, num_workers=4)
+```
+
+* 결과  
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%BD%94%EB%93%9C%EA%B2%B0%EA%B3%BC1.JPG?raw=true" width='400' hegith = '100'>  
+
+
+</br>
+
+* 학습 환경 셋팅
+```python
+device = 'cuda'
+
+model1 = ResNet18()
+model1 = model1.to(device)
+model1 = torch.nn.DataParallel(model1) # 데이터 병렬 처리
+cudnn.benchmark = True # backpropagation 학습시 가장 적합한 알고리즘을 선정해 수행.
+
+file_name = 'resnet18_mnist.pt'
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.AdamW(model1.parameters())
+def train(epoch):
+    print('[ Train epoch: %d ]' % epoch)
+    model1.train()
+    train_loss = 0
+    correct = 0
+    total = 0
+    for batch_idx, (inputs, targets) in enumerate(train_loader):
+        inputs, targets = inputs.to(device), targets.to(device)
+        optimizer.zero_grad()
+        outputs = model1(inputs)
+        loss = criterion(outputs, targets)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+        _, predicted = outputs.max(1)
+
+        total += targets.size(0)
+        correct += predicted.eq(targets).sum().item()
+    train_acc = 100. * correct / total
+    train_loss /= total
+    train_accu_list.append(train_acc)
+    train_loss_list.append(train_loss)
+    print('Total  train accuarcy:', train_acc)
+    print('Total  train loss:', train_loss)
+
+
+def test(epoch):
+    print('[ Test epoch: %d ]' % epoch)
+    model1.eval()
+    test_loss = 0
+    correct = 0
+    total = 0
+
+    for batch_idx, (inputs, targets) in enumerate(test_loader):
+        inputs, targets = inputs.to(device), targets.to(device)
+        total += targets.size(0)
+
+        outputs = model1(inputs)
+        test_loss += criterion(outputs, targets).item()
+
+        _, predicted = outputs.max(1)
+        correct += predicted.eq(targets).sum().item()
+
+    test_acc = 100. * correct / total
+    test_loss /= total
+    test_accu_list.append(test_acc)
+    test_loss_list.append(test_loss)
+    print('Test accuarcy:', test_acc)
+    print('Test average loss:', test_loss)
+
+
+    state = {
+        'model1': model1.state_dict()
+    }
+    if not os.path.isdir('checkpoint'):
+        os.mkdir('checkpoint')
+    torch.save(state, './checkpoint/' + file_name)
+    print('Model Saved!')
+
+
+# def adjust_learning_rate(optimizer, epoch):
+#     lr = learning_rate
+#     if epoch >= 5:
+#         lr /= 10
+#     for param_group in optimizer.param_groups:
+#         param_group['lr'] = lr
+
+```
+
+</br>
+
+* 학습 및 결과
+```python
+import matplotlib.pyplot as plt
+train_accu_list = []
+train_loss_list = []
+test_accu_list = []
+test_loss_list = []
+
+for epoch in range(0, 20):
+#    adjust_learning_rate(optimizer, epoch)
+    train(epoch)
+    test(epoch)
+
+plt.figure(figsize=(12, 4))
+plt.subplot(1, 2, 1)
+plt.plot(train_accu_list, label='Train Accuracy')
+plt.plot(test_accu_list, label='Test Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.subplot(1, 2, 2)
+plt.plot(train_loss_list, label='Train Loss')
+plt.plot(test_loss_list, label='Test Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend()
+
+plt.show()
+```
+
+* ResNet18 결과  
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%BD%94%EB%93%9C%EA%B2%B0%EA%B3%BC2.JPG?raw=true" width='300' hegith = '100'>    
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%BD%94%EB%93%9C%EA%B2%B0%EA%B3%BC3.JPG?raw=true" width='600' hegith = '100'>  
+
+* ResNet34 결과  
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%BD%94%EB%93%9C%EA%B2%B0%EA%B3%BC4.JPG?raw=true" width='300' hegith = '100'>    
+<img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%BD%94%EB%93%9C%EA%B2%B0%EA%B3%BC5.JPG?raw=true" width='600' hegith = '100'>  
+
+
