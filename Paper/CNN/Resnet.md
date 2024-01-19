@@ -202,13 +202,13 @@ $$ y = F(x, {W_i}) + W_sx $$
 ## 의문점.
 
 ### Residual Networks Behave Like Ensembles of Relatively Shallow Networks
-    - Residual의 구조는 Ensemble(앙상블) 모델 처럼 작동한다.  
+- Residual의 구조는 Ensemble(앙상블) 모델 처럼 작동한다.  
 
 ![](https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%95%99%EC%83%81%EB%B8%94.JPG?raw=true)
 - 3개의 Convolution layer에 대한 구조를 다른 시점에서 바라본것.
 
 #### Lesion Study(손상 연구)
-* 학습된 ResNet에서 skip connection과  downsampling projection을 제외한 블록을 제거시키고 실험.
+* 학습된 ResNet에서 skip connection과  downsampling projection을 제외한 블록을 제거시키고 실험.  
 <img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%86%90%EC%8B%A4.JPG?raw=true" width='400' hegith = '200'>   
 <img src= "https://github.com/Sbeom12/study/blob/main/image/Resnet/%EC%B6%94%EA%B0%80%EA%B2%B0%EA%B3%BC1.JPG?raw=true" width='400' hegith = '200'>     
 
@@ -424,7 +424,7 @@ test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=50, shuffle=F
 * 학습 환경 셋팅
 ```python
 device = 'cuda'
-
+l
 model1 = ResNet18()
 model1 = model1.to(device)
 model1 = torch.nn.DataParallel(model1) # 데이터 병렬 처리
@@ -492,15 +492,6 @@ def test(epoch):
         os.mkdir('checkpoint')
     torch.save(state, './checkpoint/' + file_name)
     print('Model Saved!')
-
-
-# def adjust_learning_rate(optimizer, epoch):
-#     lr = learning_rate
-#     if epoch >= 5:
-#         lr /= 10
-#     for param_group in optimizer.param_groups:
-#         param_group['lr'] = lr
-
 ```
 
 </br>
@@ -514,7 +505,6 @@ test_accu_list = []
 test_loss_list = []
 
 for epoch in range(0, 20):
-#    adjust_learning_rate(optimizer, epoch)
     train(epoch)
     test(epoch)
 
