@@ -221,8 +221,9 @@ $$L_2 = W_2 * L_1 = W_2*W_1*x^T$$
 [출처](https://www.analyticsvidhya.com/blog/2022/03/an-overview-of-deep-belief-network-dbn-in-deep-learning/)  
 
 * RBM을 이용해 가중치를 초기화한 신경망
-* [A Fast Learning Algorithm Deep Belief Nets - Restricted Boltzmann Machine(RBM)](https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf)
-* [모두를 위한 딥러닝 시즌 1](https://www.youtube.com/watch?v=4rC0sWrp3Uw&list=PLlMkM4tgfjnLSOjrEJN31gZATbcj_MpUm&index=32)
+* 관련 자세한 내용
+  * [A Fast Learning Algorithm Deep Belief Nets - Restricted Boltzmann Machine(RBM)](https://www.cs.toronto.edu/~hinton/absps/fastnc.pdf)
+  
 
 ### 현재에서 사용은?
 * 2010년의 Xavier 초기화 등장
@@ -243,6 +244,7 @@ $$L_2 = W_2 * L_1 = W_2*W_1*x^T$$
   * ReLU가 활성화 함수로 많이 사용되면서 활성화 값이 0이하인 경우에 발생하는 ReLU의 특징을 반영하기 위해 등장
   * Activation Function으로 ReLU 함수 사용 시 사용
 * 위의 두가지 방법으로 인해서 현재는 RBM은 잘 사용하지 않음.
+* [모두를 위한 딥러닝 시즌 1](https://www.youtube.com/watch?v=4rC0sWrp3Uw&list=PLlMkM4tgfjnLSOjrEJN31gZATbcj_MpUm&index=32)
 
 ## Continue
 <img width="443" alt="image" src="https://github.com/ces0o/Paper-Review/assets/127365253/effd5b97-0f24-4f59-b9a3-ab0f98da04cf">    
@@ -349,9 +351,11 @@ $$L_2 = W_2 * L_1 = W_2*W_1*x^T$$
   ```
   * 결과
     * 데이터  
-    ![alt text](swissdata.png)    
+    <img width="300" alt="image" src = "https://github.com/Sbeom12/study/blob/main/image/Auto_encoder/swissdata.png?raw=true">
+
     * PCA vs Auto_encoder  
-    ![alt text](swissresult.png) 
+    <img width="500" alt="image" src = "https://github.com/Sbeom12/study/blob/main/image/Auto_encoder/swissresult.png?raw=true">
+
 
 
 ## Result
@@ -476,5 +480,5 @@ $$L_2 = W_2 * L_1 = W_2*W_1*x^T$$
   plt.show()
   ```
   * 결과 
-  ![alt text](mnistresult.png)
+  <img width="500" alt="image" src = "https://github.com/Sbeom12/study/blob/main/image/Auto_encoder/mnistresult.png?raw=true">
 
