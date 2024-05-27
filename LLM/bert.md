@@ -163,7 +163,26 @@
 </br>
 
 ## Experiments
+* 논문의 저자들은 BERT의 성능을 평가하기 위해서 GLUE(General Language Understanding Evalution)의 벤치마크를 사용.
+* 총 9개의 Tasks로 되어 있어 모델의 언어 이해 능력을 종합적으로 평가 할 수 있다.
+  * BERT에서는 WNLI의 평가지표를 사용하지 않았음.   
+* 학습시 Batch_size = 32로, Fine-tuning은 3epoch만 진행.
 ![alt text](result_table2.png)
+* MNLI(Multi-Genre Natural Language Inference): 문장의 쌍이 주어졌을 때 그 관계를 예측.(다중분류)
+* QQP(Quora Question Pairs): Quora에서 수집된 질문 쌍이 의미적으로 동일한지 판단.(이진분류)
+* QNLI(Question Natural Language Inference): 질문-문장 쌍이 주어졌을때, 문장이 질문에 대한 답변을 포함하는지 판단.(이진분류)
+* SST-2(Stanford Sentiment Treebank): 영화 리뷰의 감정을 판단.(이진분류)
+* CoLA(Corpus of Linguistic Acceptability): 문장이 문법적으로 올바른지 판단.(이진분류)
+* STS-B(Semantic Textual Similarity BenchMark): 두 문장 간의 의미적 유사도를 0~5사이의 실수로 예측.(회귀)
+* MRPC(Microsoft Research Paraphrase Corpus): 두 문장이 의미적으로 동일한지 판단.(이진분류)
+* RTE(Recognizing Textual Entailment): 두 문장 간의 함의(포함됬는지)관계를 판단.(이진분류)
+
+<br>
+
+* 결과적으로 BERT가 가장 뛰어난 성능을 보여주는 것을 알 수 있다.
+
+* 모델 크기에 대한 고찰
+
 
 ## Related Works.
 * Word Embedding
