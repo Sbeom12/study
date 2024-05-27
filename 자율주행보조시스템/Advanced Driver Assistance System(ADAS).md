@@ -18,12 +18,12 @@
     * 자동 긴급 제동(AEB): FCW가 작동한 후에도 운전자가 적절한 조치를 취하지 않을 경우, 차량 스스로 브레이크를 작동시켜 충돌 피해를 최소화합니다.  
 ![alt text](https://i.namu.wiki/i/F2Ur9KeFZiQo6N0_Bu-nQo8upxplw96WwycktK9KDj4UNi5Ob4UtzhBL-TvVG6POYZWNiQWxQyiLOrbdIPKvGw.gif)
 
-- 차선 유지 보조 시스템 (LKAS: Lane Keeping Assist System)
-    - 카메라를 이용하여 차선을 인식하고, 차량이 차선을 이탈하지 않도록 조향을 보조
-    - Hough Transform, CNN 등을 활용한 차선 인식 알고리즘 학습
+2. 차선 이탈 경고(LDW) 및 차선 유지 보조(LKA):
+    - 차선 이탈 경고(LDW): 카메라를 이용하여 차선을 인식하고, 운전자가 방향지시등을 켜지 않고 차선을 이탈하려 할 때 경고음이나 핸들 진동 등으로 알려줍니다.
+    - 차선 유지 보조(LKA): LDW 작동 후 운전자가 조치를 취하지 않을 경우, 차량이 스스로 스티어링 휠을 제어하여 차선 내에서 주행할 수 있도록 도와줍니다.
+
 - 스마트 크루즈 컨트롤 (SCC: Smart Cruise Control)
     - 전방 차량과의 거리를 유지하며 일정 속도로 주행하는 기능
     - 레이더, 라이다 등 센서를 활용한 거리 측정 및 객체 추적 알고리즘 학습
-- 자동 긴급 제동 시스템 (AEB: Autonomous Emergency Braking)
-    - 전방 충돌 위험을 감지하고 자동으로 제동하는 기능
-    - 객체 검출 및 추적, 위험 상황 판단 알고리즘 학습
+
+
