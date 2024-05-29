@@ -181,8 +181,11 @@
 
 * 결과적으로 BERT가 가장 뛰어난 성능을 보여주는 것을 알 수 있다.
 
-* 모델 크기에 대한 고찰
-
+* 모델 크기에 대한 고찰  
+![alt text](model_size_result.png)  
+  * L은 layer의 수, H는 Hidden size, A는 attention heads
+  * LM(ppl)은 Language Model perplexity로 언어 모델의 혼란도를 평가하는 데 사용되는 지료로 낮을 수록 좋음.
+  * Fine-tuning시 모델의 크기가 클수록 효과가 좋다.
 
 ## Related Works.
 * Word Embedding
