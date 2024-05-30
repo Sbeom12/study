@@ -174,7 +174,7 @@
 ### GlUE
 * 총 9개의 Tasks로 되어 있어 모델의 언어 이해 능력을 종합적으로 평가 할 수 있다.
   * BERT에서는 WNLI의 평가지표를 사용하지 않았음.   
-* 학습시 Batch_size = 32로, Fine-tuning은 3epoch만 진행.
+* 학습시 Batch_size = 32로, Fine-tuning은 3epoch만 진행.  
 ![alt text](imgs/result_table2.png)
 * MNLI(Multi-Genre Natural Language Inference): 문장의 쌍이 주어졌을 때 그 관계를 예측.(다중분류)
 * QQP(Quora Question Pairs): Quora에서 수집된 질문 쌍이 의미적으로 동일한지 판단.(이진분류)
@@ -183,7 +183,8 @@
 * CoLA(Corpus of Linguistic Acceptability): 문장이 문법적으로 올바른지 판단.(이진분류)
 * STS-B(Semantic Textual Similarity BenchMark): 두 문장 간의 의미적 유사도를 0~5사이의 실수로 예측.(회귀)
 * MRPC(Microsoft Research Paraphrase Corpus): 두 문장이 의미적으로 동일한지 판단.(이진분류)
-* RTE(Recognizing Textual Entailment): 두 문장 간의 함의(포함됬는지)관계를 판단.(이진분류)
+* RTE(Recognizing Textual Entailment): 두 문장 간의 함의(포함됬는지)관계를 판단.(이진분류)  
+<img src='imgs/bert_archi2.png' height='800'>  
 
 <br>
 
