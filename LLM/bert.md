@@ -21,7 +21,7 @@
 * BERT는 이러한 단방향 모델들의 한계를 극복하기 위해 양방향으로 학습하여 문장의 앞뒤 문맥을 고려하여 더 정확하게 이해가 가능.
 * BERT는 pre-training단계에서 특히 Mask Language Model(MLM) 마스크된 언어 모델을 사용하여, 단방향의 한계를 극복
   * MLM은 입력에서 일부 토큰을 무작위로 [Mask]하고, 모델을 마스크된 단어를 문맥을 통해 예측하도록 함.  
-  ![alt text](masked_ex.png)
+  ![alt text](imgs/masked_ex.png)
   [이미지 출처](https://velog.io/@nawnoes/%EB%82%98%EB%A7%8C%EC%9D%98-%EC%96%B8%EC%96%B4%EB%AA%A8%EB%8D%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-Masked-Language-Model-%ED%95%99%EC%8A%B5)   
 * 이뿐만 아니라 문장을 고려하여 __다음 문장 예측__ 작업도 학습.
 
@@ -44,7 +44,7 @@
 
 ## Architecture
 * BERT는  multi-layer bidirectional Transformer encoder로 Transwer encoder를 여러 층 쌓은 것이다.   
-![alt text](Transformer.png)
+![alt text](imgs/Transformer.png)
 * BERT base는 Transformer layer 12개, Head 12개, Hidden 크기를 768로 약 110M개의 파라미터로 설정
 * BERT large는 Transformer layer 24개, Head 16개, Hidden 크기를 1024로 약 340M개의 파라미터로 설정.
 * 특히 BERT base는 GPT와의 성능 비교를 위해 파라미터 수를 동일하게 맞춤. 
@@ -68,7 +68,7 @@
   * 미등록(학습데이터에 없던) 단어를 [UNK]로 처리하지 않고 분할하여 단어 분핳.
     * moderator를 'Moder', 'ator'로 분할.
 * Input/Output Representations  
-![alt text](BERT_archi.png)
+![alt text](imgs/BERT_archi.png)
 * BERT에서 하나의 문장 혹은 한 쌍의 문장을 하나의 토큰 시퀀스로 분명하게 표현하기 위해 3가지의 Embedding vector를 Input으로 사용.
 * Token Embeddings
   * 각 토큰(word or subword)을 고정 크기의 Dense벡터로 표현.
@@ -98,12 +98,12 @@
 </br>
 
 * 단방향 VS 양방향 학습 비교  
-![alt text](Pretraining_result.png)
+![alt text](imgs/Pretraining_result.png)
   * MNLI: 전제와 가설이 주어지면, 어떤 관계인지 파악하는 문제.
   * 단방향 학습보다, 양방향 학습하는 것이 더 뛰어난 성능을 보이는 것을 볼 수 있다.
 
 * MASK 토큰화 비율 학습 비교  
-![alt text](table1.png)
+![alt text](imgs/table1.png)
   * MASK가 [MASK]로 대체, SAME은 그대로 유지, RND은 무작위 토큰으로 변경.
   * NER은 특히 [MASK] 토큰에 의해 영향을 크게 받을 것으로 예상해 두가지 방식으로 모두 학습 진행하여 결과 비교.
   * 특징 기반 접근법은 BERT의 마지막 4개 레이어를 연결하여 사용.
@@ -163,11 +163,13 @@
 </br>
 
 ## Experiments
-* 논문의 저자들은 BERT의 성능을 평가하기 위해서 GLUE(General Language Understanding Evalution)의 벤치마크를 사용.
+* 논문의 저자들은 BERT의 성능을 평가하기 위해 GLUE(General Language Understanding Evalution), SQuAD(Stanford Question Answering Dataset), SWAG(Situations With Adversarial Generations)를 사용.
+
+### GlUE
 * 총 9개의 Tasks로 되어 있어 모델의 언어 이해 능력을 종합적으로 평가 할 수 있다.
   * BERT에서는 WNLI의 평가지표를 사용하지 않았음.   
 * 학습시 Batch_size = 32로, Fine-tuning은 3epoch만 진행.
-![alt text](result_table2.png)
+![alt text](imgs/result_table2.png)
 * MNLI(Multi-Genre Natural Language Inference): 문장의 쌍이 주어졌을 때 그 관계를 예측.(다중분류)
 * QQP(Quora Question Pairs): Quora에서 수집된 질문 쌍이 의미적으로 동일한지 판단.(이진분류)
 * QNLI(Question Natural Language Inference): 질문-문장 쌍이 주어졌을때, 문장이 질문에 대한 답변을 포함하는지 판단.(이진분류)
@@ -182,14 +184,39 @@
 * 결과적으로 BERT가 가장 뛰어난 성능을 보여주는 것을 알 수 있다.
 
 * 모델 크기에 대한 고찰  
-![alt text](model_size_result.png)  
+![alt text](imgs/model_size_result.png)  
   * L은 layer의 수, H는 Hidden size, A는 attention heads
   * LM(ppl)은 Language Model perplexity로 언어 모델의 혼란도를 평가하는 데 사용되는 지료로 낮을 수록 좋음.
   * Fine-tuning시 모델의 크기가 클수록 효과가 좋다.
 
+### SQuAD
+* 약 100,000개의 질문/답변 쌍으로 구성된 데이터셋.
+* 입력으로 질문과 정답을 포함하는 위키피디아의 한 단락이 주어졌을 때, 정답 텍스트의 범위를 예측.
+* 질문에 A임베딩, 단락에는 B임베딩 사용. [CLS]질문[SEP] 단락[SEP]  
+
+![alt text](imgs/SQuAD_result.png)
+  * 기존 앙상블 모델들 보다 더 뛰어나며, 사람이 작업한것보다 성능이 더 좋았다.
+  * 실제로 TriviaQA를 이용해서 미세 조정한 BERT모델들보다 더 뛰어났다.
+    * TriviaQA: trivia 퀴즈라는 쉡사이트에서 수집된 QA 데이터셋.
+
+</br>
+
+* 추가적으로 답변이 없을 가능성을 추가하여 문제를 더 현실적으로 진행.  
+![alt text](imgs/SQuAD_result2.png)
+
+### SWAG
+* 연속적인 문자열인지를 판단하는 문제.
+* 기존문장과 가능한 문장 4개 입력으로 주어짐.
+  * 입력 예시: [CLS] 문장 A [SEP] 문장 B1 [SEP], [CLS] 문장 A [SEP] 문장 B2 [SEP], [CLS] 문장 A [SEP] 문장 B3 [SEP], [CLS] 문장 A [SEP] 문장 B4 [SEP]  
+![alt text](imgs/SWAG_result.png)
+
 ## Related Works.
 * Word Embedding
   * 단어 임베딩은 문장을 이해하는데 중요한 역활을 하며, 초기에는 비시경망 방법에서 시작해 신경방 방법(Word2vec, Glove)으로 발전
+
+* Parameters
+  * BERT-base : L=12,H=768,A=12 -> 약1.1억
+  * BERT-large : L=24,H=1024,A=16 ->약 3.3억
 
 
 
