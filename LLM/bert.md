@@ -21,14 +21,16 @@
 * BERT는 이러한 단방향 모델들의 한계를 극복하기 위해 양방향으로 학습하여 문장의 앞뒤 문맥을 고려하여 더 정확하게 이해가 가능.
 * BERT는 pre-training단계에서 특히 Mask Language Model(MLM) 마스크된 언어 모델을 사용하여, 단방향의 한계를 극복
   * MLM은 입력에서 일부 토큰을 무작위로 [Mask]하고, 모델을 마스크된 단어를 문맥을 통해 예측하도록 함.  
-  ![alt text](imgs/masked_ex.png)
+  <img src="imgs/masked_ex.png" width ="500">
+
   [이미지 출처](https://velog.io/@nawnoes/%EB%82%98%EB%A7%8C%EC%9D%98-%EC%96%B8%EC%96%B4%EB%AA%A8%EB%8D%B8-%EB%A7%8C%EB%93%A4%EA%B8%B0-Masked-Language-Model-%ED%95%99%EC%8A%B5)   
 * 이뿐만 아니라 문장을 고려하여 __다음 문장 예측__ 작업도 학습.
 
 
 ## Bert
-* BERT는 2단계로 이루어져 있다.  
-![alt text](imgs/Bert기본구조.png)
+* BERT는 2단계로 이루어져 있다.
+<img src="imgs/Bert기본구조.png" width ="700">
+
   * Pre-training과 Fine-tuning 단계로 되어 있다.
   * Pre-training Unlabled data를 활용해 초기 파라미터를 설정하고,
   * Fine-tuning에서는 Pre-traning에서 학습된 초기 파라미터를 가져와 labeled data를 활용해 재학습을 진행.
@@ -43,8 +45,10 @@
 * 어떤 Task를 담당하든 BERT 모든 동일한 구조를 가진다.
 
 ## Architecture
-* BERT는  multi-layer bidirectional Transformer encoder로 Transwer encoder를 여러 층 쌓은 것이다.   
-![alt text](imgs/Transformer.png)
+* BERT는  multi-layer bidirectional Transformer encoder로 Transwer encoder를 여러 층 쌓은 것이다.
+<img src="imgs/Transformer.png" height ="500">  
+<img src = 'https://github.com/Sbeom12/study/assets/114134484/19d04557-9ce7-4f89-935d-891ecf2f8642' width='500'>
+
 * BERT base는 Transformer layer 12개, Head 12개, Hidden 크기를 768로 약 110M개의 파라미터로 설정
 * BERT large는 Transformer layer 24개, Head 16개, Hidden 크기를 1024로 약 340M개의 파라미터로 설정.
 * 특히 BERT base는 GPT와의 성능 비교를 위해 파라미터 수를 동일하게 맞춤. 
@@ -68,7 +72,8 @@
   * 미등록(학습데이터에 없던) 단어를 [UNK]로 처리하지 않고 분할하여 단어 분핳.
     * moderator를 'Moder', 'ator'로 분할.
 * Input/Output Representations  
-![alt text](imgs/BERT_archi.png)
+<img src="imgs/BERT_archi.png" width ="700">
+
 * BERT에서 하나의 문장 혹은 한 쌍의 문장을 하나의 토큰 시퀀스로 분명하게 표현하기 위해 3가지의 Embedding vector를 Input으로 사용.
 * Token Embeddings
   * 각 토큰(word or subword)을 고정 크기의 Dense벡터로 표현.
@@ -111,7 +116,8 @@
 
 ### Next Sentence Prediction(NSP)
 * 기존 언어 모델은 두 문장 간의 관계에 대해 직접 학습을 하지 않아 문장 관계를 이해할 수 있는 모델을 학습.
-![alt text](imgs/Bert기본구조.png)
+<img src="imgs/Bert기본구조.png" width ="700">
+
 * 위 그림에서 C는 다음 문장 예측(NSP)에 사용.
 * 데이터 생성
   * 학습 예제에 문장 A와 B를 선택
