@@ -7,10 +7,10 @@
 * 사전 학습된 언어 모델은 많은 자연어 처리 문제를 해결하는데 뛰어난 성능을 보임
 * 사전 학습된 언어 모델을 활용할 수 있는 방법
   * 특징 기반 접근(Feature-Based Approach)
-    * [ELMo](https://arxiv.org/abs/1802.05365)
+    * [ELMo](https://arxiv.org/abs/1802.05365)(2018)
     * 각 작업에 맞는 별도의 모델을 만들고, 사전 학습된 언어 모델의 출력을 추가적인 다른 모델의 입력으로 사용.
   * 미세 조정 접근(Fine-tuning Approach)
-    * [GPT](https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf)
+    * [GPT](https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf)(2018)
     * 사전 학습된 모델의 모든 파라미터를 학습 데이터에 맞춰 미세 조정. 
   * 위의 두 방법의 공통점
     * 문장을 왼쪽에서 오른쪽으로 or 오른쪽에서 왼쪽으로만 읽고 학습하는 단방향 모델.
